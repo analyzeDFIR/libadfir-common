@@ -32,17 +32,18 @@ LOGGING_DEFAULTS = dict(\
     level=logging.INFO\
 )
 
-def initialize_paths():
+def initialize_paths(dirpath='lib'):
     '''
     Args:
-        N/A
+        dirpath: String => path to lib directory
     Procedure:
-        Initialize sys.path to include the lib directory of dependencies.  Raises
-        exception if unable to successfully append to sys.path, for example if sys.arv[0]
+        Initialize sys.path to include the directory of dependencies.  Raises
+        exception if unable to successfully append to sys.path, for example if sys.argv[0]
         is not a valid path.
     Preconditions:
-        N/A
+        dirpath is of type String
     '''
+    assert isinstance(dirpath, str)
     try:
         runpath = path.abspath(path.dirname(sys.argv[0]))
         assert path.exists(runpath), 'Run path %s does not exist'%runpath
@@ -51,6 +52,6 @@ def initialize_paths():
     else:
         try:
             sys.path.append(path.join(runpath))          # add runpath so 'from src.<module> import <object>' doesn't fail
-            sys.path.append(path.join(runpath, 'lib'))   # add lib for dependencies not pip-installed
+            sys.path.append(path.join(runpath, dirpath))   # add lib for dependencies not pip-installed
         except Exception as e:
-            raise Exception('Unable to append lib directory to path (%s)'%str(e))
+            raise Exception('Unable to append %s directory to path (%s)'%(dirpath, str(e)))
