@@ -24,12 +24,11 @@
 import sys
 from os import path
 from datetime import datetime
-import logging
 
 LOGGING_DEFAULTS = dict(\
     format='%(asctime)s.%(msecs)s\t%(levelname)s\t%(name)s\t%(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
-    level=logging.INFO\
+    level=20    # logging.INFO
 )
 
 def initialize_paths(dirpath='lib'):
