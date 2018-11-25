@@ -48,7 +48,7 @@ def initialize_paths(dirpath='lib'):
         runpath = path.abspath(path.dirname(sys.argv[0]))
         assert path.exists(runpath), 'Run path %s does not exist'%runpath
     except Exception as e:
-        raise Exception('Unable to append lib directory to path (%s)'%str(e))
+        raise Exception('Unable to append %s directory to path (%s)'%(dirpath, str(e)))
     else:
         try:
             sys.path.append(path.join(runpath))          # add runpath so 'from src.<module> import <object>' doesn't fail
