@@ -1,7 +1,7 @@
 ## -*- coding: UTF-8 -*-
 ## registry.py
 ##
-## Copyright (c) 2018 analyzeDFIR
+## Copyright (c) 2019 analyzeDFIR
 ## 
 ## Permission is hereby granted, free of charge, to any person obtaining a copy
 ## of this software and associated documentation files (the "Software"), to deal
@@ -21,61 +21,66 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
+from typing import Optional, Any, NoReturn, Dict, TypeVar
+T = TypeVar('T')
+S = TypeVar('S')
+
 class RegistryMetaclassMixin(object):
     '''
     Registry mixin class implementing registry pattern
     with Python metaprogramming. Intended to be used as
-    mixin with `type`.
+    mixin with type.
     '''
     _REGISTRY = None
 
     @classmethod
-    def registry(cls):
+    def registry(cls) -> Dict[str, Any]:
         '''
         Getter for static _REGISTRY
         '''
+        if cls._REGISTRY is None:
+            return dict()
         return dict(cls._REGISTRY)
     @classmethod
-    def retrieve(cls, name):
+    def retrieve(cls, name: str) -> Optional[Any]:
         '''
         Args:
-            name: String    => name of class to retrieve from registry
+            name    => name of class to retrieve from registry
         Returns:
-            Class named `name` if exists in registry, None otherwise
+            Class 'name' if in registry, None otherwise.
         Preconditions:
-            name is of type String
+            N/A
         '''
-        assert isinstance(name, str)
-        return cls._REGISTRY.get(name)
+        return cls.registry().get(name)
     @classmethod
-    def _create_class(cls, name, bases, attrs):
+    def _create_class(cls, name: str, bases: tuple, attrs: Dict[str, Any]) -> Any:
         '''
         Args:
-            name: String                => name of the class to be created
-            bases: Tuple<Any>           => base classes that the class to be created extends
-            attrs: Dict<String, Any>    => namespace for the class to be created
+            name    => name of the class to be created
+            bases   => base class(es) that the class to be created extends
+            attrs   => namespace for the class to be created
         Returns:
-            The new class
+            The new class.
         Preconditions:
-            name is of type String              (assumed True)
-            bases is of type Tuple<String>      (assumed True)
-            attrs is of type Dict<String, Any>  (assumed True)
+            N/A
         '''
         new_cls = type.__new__(cls, name, bases, attrs)
         return new_cls
     @classmethod
-    def _add_class(cls, name, new_cls):
+    def _add_class(cls, name: str, new_cls: Any) -> NoReturn:
         '''
         Args:
-            new_cls: type   => new class to add to registry
+            new_cls => new class to add to registry
         Procedure:
-            Add new class to registry if passes checks
+            Apply checks to new class and add to registry if all checks passed.
         Preconditions:
-            new_cls is subclass of DirectiveRegistry    (assumed True)
+            N/A
         '''
-        raise NotImplementedError('_add_class not implemented for class %s'%cls.__name__)
+        raise NotImplementedError(
+            '_add_class not implemented for class %s'%cls.__name__
+        )
 
-    def __new__(cls, name, bases, attrs):
+    def __new__(cls, name: str, bases: type, attrs: Dict[str, Any]) -> Any:
         '''
         Args:
             name: String                => name of new class
@@ -91,3 +96,38 @@ class RegistryMetaclassMixin(object):
         new_cls = cls._create_class(name, bases, attrs)
         cls._add_class(name, new_cls)
         return new_cls
+
+class Container(Dict[T, S]):
+    '''
+    Generic container that implements both the Dict API
+    as well as attribute-like access to data in the mapping.
+    For example, to access the value for key 'this_key' in the container
+    variable 'tup' one could use:
+        tup.this_key or
+        tup['this_key'] or
+        tup.get('this_key')
+    '''
+    def __getattr__(self, key: T) -> S:
+        '''
+        Attribute access implementation - passthrough to dict.__getitem__
+        '''
+        try:
+            return self[key]
+        except KeyError:
+            raise AttributeError(key)
+    def __setattr__(self, key: T, value: S) -> None:
+        '''
+        Attribute set implementation - passthrough to dict.__setitem__
+        '''
+        try:
+            self[key] = value
+        except KeyError:
+            raise AttributeError(key)
+    def __delattr__(self, key: T) -> S:
+        '''
+        Attribute deletion implementation - passthrough to dict.__delitem__
+        '''
+        try:
+            del self[name]
+        except KeyError:
+            raise AttributeError(key)

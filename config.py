@@ -1,7 +1,7 @@
 ## -*- coding: UTF-8 -*-
 ## config.py
 ##
-## Copyright (c) 2018 analyzeDFIR
+## Copyright (c) 2019 analyzeDFIR
 ## 
 ## Permission is hereby granted, free of charge, to any person obtaining a copy
 ## of this software and associated documentation files (the "Software"), to deal
@@ -31,18 +31,17 @@ LOGGING_DEFAULTS = dict(\
     level=20    # logging.INFO
 )
 
-def initialize_paths(dirpath='lib'):
+def include_dependencies_in_path(dirpath: str = None) -> None:
     '''
     Args:
-        dirpath: String => path to lib directory
+        dirpath => path to dependency directory (relative to program run path)
     Procedure:
-        Initialize sys.path to include the directory of dependencies.  Raises
+        Initialize sys.path to include a directory of dependencies.  Raises
         exception if unable to successfully append to sys.path, for example if sys.argv[0]
         is not a valid path.
     Preconditions:
-        dirpath is of type String
+        N/A
     '''
-    assert isinstance(dirpath, str)
     try:
         runpath = path.abspath(path.dirname(sys.argv[0]))
         assert path.exists(runpath), 'Run path %s does not exist'%runpath
@@ -50,7 +49,6 @@ def initialize_paths(dirpath='lib'):
         raise Exception('Unable to append %s directory to path (%s)'%(dirpath, str(e)))
     else:
         try:
-            sys.path.append(path.join(runpath))          # add runpath so 'from src.<module> import <object>' doesn't fail
-            sys.path.append(path.join(runpath, dirpath))   # add lib for dependencies not pip-installed
+            sys.path.append(path.join(runpath, dirpath))
         except Exception as e:
             raise Exception('Unable to append %s directory to path (%s)'%(dirpath, str(e)))
