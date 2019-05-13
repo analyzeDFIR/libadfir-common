@@ -80,18 +80,16 @@ class RegistryMetaclassMixin(object):
             '_add_class not implemented for class %s'%cls.__name__
         )
 
-    def __new__(cls, name: str, bases: type, attrs: Dict[str, Any]) -> Any:
+    def __new__(cls, name: str, bases: tuple, attrs: Dict[str, Any]) -> Any:
         '''
         Args:
-            name: String                => name of new class
-            bases: NTuple<Class>        => tuple of base classes
-            attrs: Dict<String, Any>    => dictionary of type attributes
+            name    => name of new class
+            bases   => tuple of base classes
+            attrs   => dictionary of type attributes
         Returns:
             Newly created directive class
         Preconditions:
-            name is of type String              (assumed True)
-            bases is of type NTuple<Class>      (assumed True)
-            attrs is of type Dict<String, Any>  (assumed True)
+            N/A
         '''
         new_cls = cls._create_class(name, bases, attrs)
         cls._add_class(name, new_cls)
@@ -128,6 +126,6 @@ class Container(Dict[T, S]):
         Attribute deletion implementation - passthrough to dict.__delitem__
         '''
         try:
-            del self[name]
+            del self[key]
         except KeyError:
             raise AttributeError(key)

@@ -42,9 +42,9 @@ class TaskResult(object):
     '''
     Container for the result from running a task.  The status attribute
     contains a TaskStatus enum value signaling if the task was successful,
-    and the state attribute is a dictionary of data returned from running
+    and the state attribute is a mapping of data returned from running
     the task.  The state data could be used, for example, to pass data
-    from task to another in a pipeline-like fashion.
+    from one task to another in a pipeline-like fashion.
     '''
     def __init__(self, 
         status: Optional[TaskStatus] = None, 
@@ -80,8 +80,8 @@ class TaskResult(object):
 class BaseTask(object):
     '''
     Abstract task class, can be used for any kind of task
-    that involves some setup steps, a main set or loop,
-    and some teardown steps.  The term 'task' is used
+    that involves (optional) setup steps, a main step or loop,
+    and (optional) teardown steps.  The term 'task' is used
     loosely here, and this class is purposefully flexible
     in order to serve many different use cases.
     '''
@@ -99,12 +99,12 @@ class BaseTask(object):
         Setter for result
         '''
         self.__result = value
-    def __call__(self) -> Optional[TaskResult]:
+    def __call__(self, *args, **kwargs) -> Optional[TaskResult]:
         '''
         @BaseTask.run
         '''
-        return self.run()
-    def _preamble(self) -> None:
+        return self.run(*args, **kwargs)
+    def _preamble(self, *args, **kwargs) -> None:
         '''
         Args:
             N/A
@@ -134,18 +134,20 @@ class BaseTask(object):
             Conduct necessary teardown tasks after task is processed.
         '''
         pass
-    def run(self) -> Optional[TaskResult]:
+    def run(self, *args, **kwargs) -> Optional[TaskResult]:
         '''
         Args:
             N/A
         Returns:
             Run this task and return the result.  Subclasses may overload
-            this function signature to accept other parameters, though the 
-            __call__ function should be updated accordingly.
+            this function signature to accept specific parameters, though the
+            __call__ and _preamble functions should be updated accordingly.
+            Alternatively, just the _preamble function signature could 
+            be updated.
         Preconditions:
             N/A
         '''
-        self._preamble()
+        self._preamble(*args, **kwargs)
         self._process_task()
         self._postamble()
         return self.result

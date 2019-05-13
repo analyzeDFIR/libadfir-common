@@ -21,6 +21,8 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
+from typing import Optional
+
 import sys
 from os import path
 from datetime import datetime
@@ -31,24 +33,32 @@ LOGGING_DEFAULTS = dict(\
     level=20    # logging.INFO
 )
 
-def include_dependencies_in_path(dirpath: str = None) -> None:
+def include_dependencies_in_path(dirpath: Optional[str] = None) -> None:
     '''
     Args:
-        dirpath => path to dependency directory (relative to program run path)
+        dirpath => path to dependency directory
     Procedure:
-        Initialize sys.path to include a directory of dependencies.  Raises
-        exception if unable to successfully append to sys.path, for example if sys.argv[0]
-        is not a valid path.
+        Initialize sys.path to include a directory of dependencies.  If dirpath
+        is None, includes the launch path of the running python program.  Raises
+        exception if unable to successfully append to sys.path, for example if
+        dirpath is None and sys.argv[0] is not a valid path.
     Preconditions:
         N/A
     '''
     try:
-        runpath = path.abspath(path.dirname(sys.argv[0]))
-        assert path.exists(runpath), 'Run path %s does not exist'%runpath
+        if dirpath is None:
+            dirpath = path.abspath(path.dirname(sys.argv[0]))
     except Exception as e:
-        raise Exception('Unable to append %s directory to path (%s)'%(dirpath, str(e)))
+        raise Exception(
+            'Unable to append %s directory to sys.path (%s)'%(dirpath, str(e))
+        )
     else:
         try:
-            sys.path.append(path.join(runpath, dirpath))
+            sys.path.append(dirpath)
         except Exception as e:
-            raise Exception('Unable to append %s directory to path (%s)'%(dirpath, str(e)))
+            raise Exception(
+                'Unable to append %s directory to sys.path (%s)'%(
+                    dirpath, 
+                    str(e)
+                )
+            )

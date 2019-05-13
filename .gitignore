@@ -5,8 +5,7 @@
 *.pyc
 *__pycache__*
 
-# Ignore any test directories or log files
-*test*
+# Ignore log files
 *.log
 
 # Ignore Vim temp files
