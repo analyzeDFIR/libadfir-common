@@ -27,115 +27,113 @@ from enum import Enum
 
 from .patterns import Container
 
+
 class TaskStatus(Enum):
-    '''
-    Enum representing whether a task was:
+    """Enum representing whether a task was:
         1) Successful
         2) Partially successful (encountered error after making some progress)
         3) Unsuccessful (failed)
-    '''
+    """
     SUCCESS         = 0
     PARTIAL_SUCCESS = 1
     FAILURE         = 2
 
+
 class TaskResult(object):
-    '''
-    Container for the result from running a task.  The status attribute
+    """Container for the result from running a task.  The status attribute
     contains a TaskStatus enum value signaling if the task was successful,
     and the state attribute is a mapping of data returned from running
     the task.  The state data could be used, for example, to pass data
     from one task to another in a pipeline-like fashion.
-    '''
+    """
+
     def __init__(self, 
         status: Optional[TaskStatus] = None, 
         state: Optional[Container[str, Any]] = None
     ) -> None:
         self.status = status
         self.state = state
+
     @property
     def status(self) -> Optional[TaskStatus]:
-        '''
-        Getter for status
-        '''
+        """Getter for status"""
         return self.__status
+
     @status.setter
     def status(self, value: Optional[TaskStatus]) -> None:
-        '''
-        Setter for status
-        '''
+        """Setter for status"""
         self.__status = value
+
     @property
     def state(self) -> Optional[Container[str, Any]]:
-        '''
-        Getter for state
-        '''
+        """Getter for state"""
         return self.__state
+
     @state.setter
     def state(self, value: Optional[Container[str, Any]]) -> None:
-        '''
-        Setter for state
-        '''
+        """Setter for state"""
         self.__state = value
 
+
 class BaseTask(object):
-    '''
-    Abstract task class, can be used for any kind of task
+    """Abstract task class, can be used for any kind of task
     that involves (optional) setup steps, a main step or loop,
     and (optional) teardown steps.  The term 'task' is used
     loosely here, and this class is purposefully flexible
     in order to serve many different use cases.
-    '''
+    """
+
     def __init__(self, result: Optional[TaskResult] = None) -> None:
         self.result = result
+
     @property
     def result(self) -> Optional[TaskResult]:
-        '''
-        Getter for result
-        '''
+        """Getter for result"""
         return self.__result
+
     @result.setter
     def result(self, value: Optional[TaskResult]) -> None:
-        '''
-        Setter for result
-        '''
+        """Setter for result"""
         self.__result = value
-    def __call__(self, *args, **kwargs) -> Optional[TaskResult]:
-        '''
-        @BaseTask.run
-        '''
+
+    def __call__(self, *args: Any, **kwargs: Any) -> Optional[TaskResult]:
         return self.run(*args, **kwargs)
-    def _preamble(self, *args, **kwargs) -> None:
-        '''
+
+    def _preamble(self, *args: Any, **kwargs: Any) -> None:
+        """
         Args:
             N/A
         Procedure:
             Conduct necessary setup steps before the task is processed.
         Preconditions:
             N/A
-        '''
+        """
         pass
+
     def _process_task(self) -> None:
-        '''
+        """
         Args:
             N/A
         Procedure:
             Process this task.
         Preconditions:
             N/A
-        '''
+        """
         raise NotImplementedError(
             '_process_task is not implemented for type %s'%type(self).__name__
         )
+
     def _postamble(self) -> None:
-        '''
+        """
         Args:
             N/A
         Procedure:
             Conduct necessary teardown tasks after task is processed.
-        '''
+        """
         pass
-    def run(self, *args, **kwargs) -> Optional[TaskResult]:
-        '''
+
+    def run(self, *args: Any, **kwargs: Any) -> Optional[TaskResult]:
+        """
         Args:
             N/A
         Returns:
@@ -146,7 +144,7 @@ class BaseTask(object):
             be updated.
         Preconditions:
             N/A
-        '''
+        """
         self._preamble(*args, **kwargs)
         self._process_task()
         self._postamble()

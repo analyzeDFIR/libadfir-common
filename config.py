@@ -34,7 +34,7 @@ LOGGING_DEFAULTS = dict(\
 )
 
 def include_dependencies_in_path(dirpath: Optional[str] = None) -> None:
-    '''
+    """
     Args:
         dirpath => path to dependency directory
     Procedure:
@@ -44,7 +44,7 @@ def include_dependencies_in_path(dirpath: Optional[str] = None) -> None:
         dirpath is None and sys.argv[0] is not a valid path.
     Preconditions:
         N/A
-    '''
+    """
     try:
         if dirpath is None:
             dirpath = path.abspath(path.dirname(sys.argv[0]))
