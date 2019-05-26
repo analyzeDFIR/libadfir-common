@@ -2,17 +2,17 @@
 ## test_task.py
 ##
 ## Copyright (c) 2019 analyzeDFIR
-## 
+##
 ## Permission is hereby granted, free of charge, to any person obtaining a copy
 ## of this software and associated documentation files (the "Software"), to deal
 ## in the Software without restriction, including without limitation the rights
 ## to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 ## copies of the Software, and to permit persons to whom the Software is
 ## furnished to do so, subject to the following conditions:
-## 
+##
 ## The above copyright notice and this permission notice shall be included in all
 ## copies or substantial portions of the Software.
-## 
+##
 ## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 ## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -41,8 +41,8 @@ class SimpleTask(BaseTask):
         """Setter for previous_task_result"""
         self.__previous_task_result = value
 
-    def _preamble(self,
-        previous_task_result: Optional[TaskResult] = None
+    def _preamble(self,                                     #pylint: disable=W0221
+        previous_task_result: Optional[TaskResult] = None   #pylint: disable=W0221
     ) -> None:
         """@BaseTask._preamble"""
         if previous_task_result is None:
@@ -52,7 +52,7 @@ class SimpleTask(BaseTask):
     def _process_task(self) -> None:
         """@BaseTask._process_task"""
         self.result = TaskResult(
-            TaskStatus.SUCCESS, 
+            TaskStatus.SUCCESS,
             Container(task=type(self).__name__)
         )
 
@@ -60,23 +60,23 @@ class SimpleTask(BaseTask):
 class TestTask(TestCase):
     """Unit tests for TaskResult and BaseTask"""
 
-    def testRunSingleTaskRunMethod(self):
+    def test_run_single_task_run_method(self):
         """Run single SimpleTask and check result"""
         task = SimpleTask()
         result = task.run()
         self.assertTrue(result.status == TaskStatus.SUCCESS)
 
-    def testRunSingleTaskCallMethod(self):
+    def test_run_single_task_call_method(self):
         """Run single SimpleTask and check result"""
         task = SimpleTask()
         result = task()
         self.assertTrue(result.status == TaskStatus.SUCCESS)
 
-    def testSimpleTaskPipeline(self):
+    def test_simple_task_pipeline(self):
         """Run sequence of SimpleTasks, passing results down pipeline"""
         previous_task_result = None
         for i in range(5):
             task = SimpleTask(previous_task_result)
             previous_task_result = task()
             with self.subTest(i=i):
-                self.assertEqual(previous_task_result.status,TaskStatus.SUCCESS)
+                self.assertEqual(previous_task_result.status, TaskStatus.SUCCESS)

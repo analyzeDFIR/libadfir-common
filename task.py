@@ -2,17 +2,17 @@
 ## task.py
 ##
 ## Copyright (c) 2019 analyzeDFIR
-## 
+##
 ## Permission is hereby granted, free of charge, to any person obtaining a copy
 ## of this software and associated documentation files (the "Software"), to deal
 ## in the Software without restriction, including without limitation the rights
 ## to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 ## copies of the Software, and to permit persons to whom the Software is
 ## furnished to do so, subject to the following conditions:
-## 
+##
 ## The above copyright notice and this permission notice shall be included in all
 ## copies or substantial portions of the Software.
-## 
+##
 ## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 ## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,7 +21,7 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
-from typing import Optional, Dict, Any
+from typing import Optional, Any
 
 from enum import Enum
 
@@ -34,12 +34,12 @@ class TaskStatus(Enum):
         2) Partially successful (encountered error after making some progress)
         3) Unsuccessful (failed)
     """
-    SUCCESS         = 0
+    SUCCESS = 0
     PARTIAL_SUCCESS = 1
-    FAILURE         = 2
+    FAILURE = 2
 
 
-class TaskResult(object):
+class TaskResult:
     """Container for the result from running a task.  The status attribute
     contains a TaskStatus enum value signaling if the task was successful,
     and the state attribute is a mapping of data returned from running
@@ -47,8 +47,8 @@ class TaskResult(object):
     from one task to another in a pipeline-like fashion.
     """
 
-    def __init__(self, 
-        status: Optional[TaskStatus] = None, 
+    def __init__(self,
+        status: Optional[TaskStatus] = None,
         state: Optional[Container[str, Any]] = None
     ) -> None:
         self.status = status
@@ -75,7 +75,7 @@ class TaskResult(object):
         self.__state = value
 
 
-class BaseTask(object):
+class BaseTask:
     """Abstract task class, can be used for any kind of task
     that involves (optional) setup steps, a main step or loop,
     and (optional) teardown steps.  The term 'task' is used
@@ -108,7 +108,6 @@ class BaseTask(object):
         Preconditions:
             N/A
         """
-        pass
 
     def _process_task(self) -> None:
         """
@@ -130,7 +129,6 @@ class BaseTask(object):
         Procedure:
             Conduct necessary teardown tasks after task is processed.
         """
-        pass
 
     def run(self, *args: Any, **kwargs: Any) -> Optional[TaskResult]:
         """
@@ -140,7 +138,7 @@ class BaseTask(object):
             Run this task and return the result.  Subclasses may overload
             this function signature to accept specific parameters, though the
             __call__ and _preamble functions should be updated accordingly.
-            Alternatively, just the _preamble function signature could 
+            Alternatively, just the _preamble function signature could
             be updated.
         Preconditions:
             N/A

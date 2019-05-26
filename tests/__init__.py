@@ -1,5 +1,5 @@
 ## -*- coding: UTF-8 -*-
-## test_config.py
+## __init__.py
 ##
 ## Copyright (c) 2019 analyzeDFIR
 ##
@@ -20,41 +20,3 @@
 ## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
-
-#pylint: disable=C0103
-from unittest import TestCase
-import sys
-from os import path
-
-from ..config import include_dependencies_in_path
-
-
-class TestConfigIncludeDependenciesInPath(TestCase):
-    """Unit tests for include_dependencies_in_path"""
-
-    def setUp(self):
-        """Set argv[0] to full path to test file"""
-        self.original_argv = sys.argv
-        self.original_path = sys.path
-        sys.argv[0] = path.abspath(__file__)
-
-    def test_no_dirpath(self):
-        """dirpath is None"""
-        include_dependencies_in_path()
-        self.assertEqual(sys.path[-1], path.abspath(path.dirname(__file__)))
-
-    def test_provided_dirpath(self):
-        """dirpath is 'lib'"""
-        include_dependencies_in_path(path.join(
-            path.abspath(path.dirname(__file__)),
-            'lib'
-        ))
-        self.assertEqual(sys.path[-1], path.join(
-            path.abspath(path.dirname(__file__)),
-            'lib'
-        ))
-
-    def tearDown(self):
-        """Reset sys.argv to original value"""
-        sys.argv = self.original_argv
-        sys.path = self.original_path

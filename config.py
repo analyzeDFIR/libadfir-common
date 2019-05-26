@@ -2,17 +2,17 @@
 ## config.py
 ##
 ## Copyright (c) 2019 analyzeDFIR
-## 
+##
 ## Permission is hereby granted, free of charge, to any person obtaining a copy
 ## of this software and associated documentation files (the "Software"), to deal
 ## in the Software without restriction, including without limitation the rights
 ## to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 ## copies of the Software, and to permit persons to whom the Software is
 ## furnished to do so, subject to the following conditions:
-## 
+##
 ## The above copyright notice and this permission notice shall be included in all
 ## copies or substantial portions of the Software.
-## 
+##
 ## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 ## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,7 +25,6 @@ from typing import Optional
 
 import sys
 from os import path
-from datetime import datetime
 
 LOGGING_DEFAULTS = dict(\
     format='%(asctime)s.%(msecs)s\t%(levelname)s\t%(name)s\t%(message)s',
@@ -48,17 +47,17 @@ def include_dependencies_in_path(dirpath: Optional[str] = None) -> None:
     try:
         if dirpath is None:
             dirpath = path.abspath(path.dirname(sys.argv[0]))
-    except Exception as e:
+    except Exception as exc:
         raise Exception(
-            'Unable to append %s directory to sys.path (%s)'%(dirpath, str(e))
+            'Unable to append %s directory to sys.path (%s)'%(dirpath, str(exc))
         )
     else:
         try:
             sys.path.append(dirpath)
-        except Exception as e:
+        except Exception as exc:
             raise Exception(
                 'Unable to append %s directory to sys.path (%s)'%(
-                    dirpath, 
-                    str(e)
+                    dirpath,
+                    str(exc)
                 )
             )
