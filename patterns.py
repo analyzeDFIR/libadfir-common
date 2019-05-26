@@ -27,8 +27,7 @@ S = TypeVar('S')
 
 
 class RegistryMetaclassMixin:
-    """
-    Registry mixin class implementing registry pattern
+    """Registry mixin class implementing registry pattern
     with Python metaprogramming. Intended to be used as
     mixin with type.
     """

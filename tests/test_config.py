@@ -30,21 +30,21 @@ from ..config import include_dependencies_in_path
 
 
 class TestConfigIncludeDependenciesInPath(TestCase):
-    """Unit tests for include_dependencies_in_path"""
+    """Unit tests for include_dependencies_in_path."""
 
     def setUp(self):
-        """Set argv[0] to full path to test file"""
+        """Set argv[0] to full path to test file."""
         self.original_argv = sys.argv
         self.original_path = sys.path
         sys.argv[0] = path.abspath(__file__)
 
     def test_no_dirpath(self):
-        """dirpath is None"""
+        """dirpath is None."""
         include_dependencies_in_path()
         self.assertEqual(sys.path[-1], path.abspath(path.dirname(__file__)))
 
     def test_provided_dirpath(self):
-        """dirpath is 'lib'"""
+        """dirpath is 'lib'."""
         include_dependencies_in_path(path.join(
             path.abspath(path.dirname(__file__)),
             'lib'
@@ -55,6 +55,6 @@ class TestConfigIncludeDependenciesInPath(TestCase):
         ))
 
     def tearDown(self):
-        """Reset sys.argv to original value"""
+        """Reset sys.argv to original value."""
         sys.argv = self.original_argv
         sys.path = self.original_path
