@@ -21,7 +21,7 @@
 ## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ## SOFTWARE.
 
-from typing import Optional, Any, NoReturn, Dict, TypeVar
+from typing import Optional, Any, Dict, TypeVar
 T = TypeVar('T')
 S = TypeVar('S')
 
