@@ -68,18 +68,18 @@ class RegistryMetaclassMixin:
         return new_cls
 
     @classmethod
-    def _add_class(cls, name: str, new_cls: Any) -> NoReturn:
+    def _add_class(cls, name: str, new_cls: Any) -> None:
         """
         Args:
+            name    => name of new class
             new_cls => new class to add to registry
         Procedure:
             Apply checks to new class and add to registry if all checks passed.
+            NOTE:
+                By default this function is a NOOP.
         Preconditions:
             N/A
         """
-        raise NotImplementedError(
-            '_add_class not implemented for class %s'%cls.__name__
-        )
 
     def __new__(cls, name: str, bases: tuple, attrs: Dict[str, Any]) -> Any:
         """
